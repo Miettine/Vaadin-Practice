@@ -35,8 +35,30 @@ public class MyUI extends UI {
     @Override
     protected void init(VaadinRequest vaadinRequest) {
     	
+    	//Label label = new Label("Version 0.1");
 
-        final VerticalLayout layout = new VerticalLayout();
+    	VerticalLayout layout = new VerticalLayout();
+        
+        grid.setColumns("firstName", "lastName","birthDate","email");
+        updateList();
+        setContent(layout);
+        
+        layout.addComponent(grid);
+        
+      
+
+     // A button that takes all the space available in the layout.
+
+     grid.setSizeFull();
+     layout.addComponent(grid);
+
+     // We must set the layout to a defined height vertically, in
+     // this case 100% of its parent layout, which also must
+     // not have undefined size.
+     layout.setHeight("100%");
+        
+     setContent(grid);
+     
         /*
         final TextField name = new TextField();
         name.setCaption("Type your name here:");
@@ -47,14 +69,17 @@ public class MyUI extends UI {
                     + ", it works!"));
         });
         */
-        layout.addComponent(grid);
-        layout.setMargin(true);
-        layout.setSpacing(true);
 
         
-        updateList();
+        /*layout.setMargin(true);
+        layout.setSpacing(true);
         
-        setContent(layout);
+        layout.setSizeUndefined();
+        */
+        
+        //layout.setExpandRatio(grid, 1.0f); // Expand
+        
+      
     }
 
 	public void updateList() {
