@@ -9,14 +9,18 @@ import javax.servlet.annotation.WebServlet;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * This UI is the application entry point. A UI may either represent a browser window 
@@ -32,33 +36,51 @@ public class MyUI extends UI {
 	
 	private Grid grid = new Grid();
 	
+	private TextField filterText = new TextField();
+	
     @Override
     protected void init(VaadinRequest vaadinRequest) {
     	
     	//Label label = new Label("Version 0.1");
 
-    	VerticalLayout layout = new VerticalLayout();
-        
-        grid.setColumns("firstName", "lastName","birthDate","email");
-        updateList();
-        setContent(layout);
-        
-        layout.addComponent(grid);
-        
-      
+		VerticalLayout layout = new VerticalLayout();
 
-     // A button that takes all the space available in the layout.
+		CssLayout filteringLayout = new CssLayout();
 
-     grid.setSizeFull();
-     layout.addComponent(grid);
+		filterText.setInputPrompt("Filter by name");
 
-     // We must set the layout to a defined height vertically, in
-     // this case 100% of its parent layout, which also must
-     // not have undefined size.
-     layout.setHeight("100%");
-        
-     setContent(grid);
-     
+		filterText.addTextChangeListener(e -> {
+			grid.setContainerDataSource(new BeanItemContainer<>(Customer.class, customerService.findAll(e.getText())));
+		});
+
+		Button clearFilterButton = new Button(FontAwesome.TIMES);
+		clearFilterButton.addClickListener(e -> {
+			filterText.clear();
+			updateList();
+		});
+
+		grid.setColumns("firstName", "lastName", "birthDate", "email");
+		updateList();
+		setContent(layout);
+
+		filteringLayout.setStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+
+		filteringLayout.addComponents(filterText, clearFilterButton);
+
+		filteringLayout.setHeight("10%");
+		// horizontalLayout.setWidth("100%");
+
+		layout.addComponents(filteringLayout, grid);
+
+		// A button that takes all the space available in the layout.
+
+		grid.setSizeFull();
+		layout.addComponent(grid);
+
+		layout.setHeight("100%");
+
+		setContent(layout);
+
         /*
         final TextField name = new TextField();
         name.setCaption("Type your name here:");
@@ -83,7 +105,7 @@ public class MyUI extends UI {
     }
 
 	public void updateList() {
-		List<Customer> customers = customerService.findAll();
+		List<Customer> customers = customerService.findAll(filterText.getValue());
         
         grid.setContainerDataSource(new BeanItemContainer<>(Customer.class, customers));
 	}
