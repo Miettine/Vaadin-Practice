@@ -13,6 +13,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
@@ -37,6 +38,8 @@ public class MyUI extends UI {
 	private Grid grid = new Grid();
 	
 	private TextField filterText = new TextField();
+	
+	private CustomerForm form = new CustomerForm(this);
 	
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -69,8 +72,18 @@ public class MyUI extends UI {
 
 		filteringLayout.setHeight("10%");
 		// horizontalLayout.setWidth("100%");
+		
+		HorizontalLayout main = new HorizontalLayout();
+		
+		layout.addComponents((Component) form, grid);
+		main.setSpacing(true);
+		main.setSizeFull();
+		grid.setSizeFull();
+		main.setExpandRatio(grid, 1);
 
-		layout.addComponents(filteringLayout, grid);
+		
+		
+		layout.addComponents(filterText, main);
 
 		// A button that takes all the space available in the layout.
 
