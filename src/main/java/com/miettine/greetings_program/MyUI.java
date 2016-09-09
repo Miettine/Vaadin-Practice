@@ -62,6 +62,12 @@ public class MyUI extends UI {
 			updateList();
 		});
 
+		Button addCustomerBtn = new Button("Add new customer");
+		addCustomerBtn.addClickListener(e -> {
+		    grid.select(null);
+		    form.setCustomer(new Customer());
+		});
+		
 		grid.setColumns("firstName", "lastName", "birthDate", "email");
 		updateList();
 		setContent(layout);
@@ -73,27 +79,35 @@ public class MyUI extends UI {
 		filteringLayout.setHeight("10%");
 		// horizontalLayout.setWidth("100%");
 		
-		HorizontalLayout main = new HorizontalLayout();
+		HorizontalLayout main = new HorizontalLayout(grid ,form);
 		
-		layout.addComponents((Component) form, grid);
+		//layout.addComponents(grid ,form);
 		main.setSpacing(true);
 		main.setSizeFull();
 		grid.setSizeFull();
 		main.setExpandRatio(grid, 1);
-
 		
-		
-		layout.addComponents(filterText, main);
+		layout.addComponents(filterText, main,addCustomerBtn);
 
 		// A button that takes all the space available in the layout.
 
 		grid.setSizeFull();
-		layout.addComponent(grid);
 
 		layout.setHeight("100%");
 
 		setContent(layout);
 
+		form.setVisible(false);
+		
+		
+		grid.addSelectionListener(event ->{
+			if(event.getSelected().isEmpty()){
+				form.setVisible(false);
+			}else {
+				Customer customer = (Customer)event.getSelected().iterator().next();
+				form.setCustomer(customer);
+			}
+		});
         /*
         final TextField name = new TextField();
         name.setCaption("Type your name here:");
