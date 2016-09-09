@@ -120,7 +120,8 @@ public class MyUI extends UI {
         */
 
         
-        /*layout.setMargin(true);
+        /*
+        layout.setMargin(true);
         layout.setSpacing(true);
         
         layout.setSizeUndefined();
